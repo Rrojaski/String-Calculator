@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 
 // Custom Components
 import RouteLink from '../../components/RouteLink/RouteLink';
@@ -66,6 +66,33 @@ function Dashboard() {
     valueHistory: []
   });
 
+  // Defractured State
+  const { currentAnswer, currentValue, valueHistory } = state;
+
+  const handleChange = string => {
+    const regex = /[0-9\+\-\/\* ()]/g;
+    const input = string.target.value.match(regex);
+
+    setState(Object.assign({}, state, { currentValue: input.join('') }));
+  };
+
+
+  useEffect(() => {
+    document.getElementById('input').addEventListener('keydown', function (event) {
+      // Quick fix for removing last character on keydown
+      console.log(currentValue.split('').length)
+      if (currentValue.split('').length <= 1) {
+        if (event.keyCode === 8 || event.keyCode === 46) {
+
+          setState(Object.assign({}, state, { currentValue: '' }));
+        }
+      }
+    })
+
+  }
+  )
+
+
   const handleSubmit = e => {
     e.preventDefault();
     if (state.currentValue) {
@@ -77,17 +104,6 @@ function Dashboard() {
         currentValue: "",
         valueHistory: [...state.valueHistory, results]
       });
-
-      console.log(state);
-    }
-  };
-
-  const handleChange = string => {
-    const regex = /[0-9\+\-\/\* ()]/g;
-    const input = string.target.value.match(regex);
-    if (input) {
-      setState(Object.assign({}, state, { currentValue: input.join('') }));
-      console.log(state)
     }
   };
 
@@ -156,8 +172,8 @@ function Dashboard() {
           {/* End hero unit */}
           <form onSubmit={e => handleSubmit(e)} className={classes.form}>
             <TextField
-              onChange={handleChange}
-              value={state.currentValue}
+              onChange={event => handleChange(event)}
+              value={currentValue}
               label="String of numbers"
               id="input"
               margin="normal"
