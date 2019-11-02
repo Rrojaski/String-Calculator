@@ -35,4 +35,5 @@ These instructions will get you a copy of the project up and running on your loc
 
 # To Do
 
-*Fix in index, input unable to delete last character
+* Fix in /index, input unable to delete last character
+* Fix in routes/index, Route won't render new page
