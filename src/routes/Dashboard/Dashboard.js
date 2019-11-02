@@ -58,13 +58,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Dashboard() {
+const Dashboard = () => {
   const classes = useStyles();
   const [state, setState] = useState({
     currentValue: "",
     currentAnswer: "",
     valueHistory: []
   });
+
+  const [value, setValue] = useState('')
+
 
   // Defractured State
   const { currentAnswer, currentValue, valueHistory } = state;
@@ -73,35 +76,24 @@ function Dashboard() {
     const regex = /[0-9\+\-\/\* ()]/g;
     const input = string.target.value.match(regex);
 
-    setState(Object.assign({}, state, { currentValue: input.join('') }));
+    if (input !== null) {
+      setValue(input.join(""));
+    } else {
+      setValue('');
+    }
   };
 
-
-  useEffect(() => {
-    document.getElementById('input').addEventListener('keydown', function (event) {
-      // Quick fix for removing last character on keydown
-      console.log(currentValue.split('').length)
-      if (currentValue.split('').length <= 1) {
-        if (event.keyCode === 8 || event.keyCode === 46) {
-
-          setState(Object.assign({}, state, { currentValue: '' }));
-        }
-      }
-    })
-
-  }
-  )
 
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (state.currentValue) {
+    if (value) {
 
-      const results = calc(state.currentValue);
+      const results = calc(value);
+      setValue('')
       setState({
         ...state,
         currentAnswer: results,
-        currentValue: "",
         valueHistory: [...state.valueHistory, results]
       });
     }
@@ -173,7 +165,8 @@ function Dashboard() {
           <form onSubmit={e => handleSubmit(e)} className={classes.form}>
             <TextField
               onChange={event => handleChange(event)}
-              value={currentValue}
+              onKeyDown={function () { console.log('test') }}
+              value={value}
               label="String of numbers"
               id="input"
               margin="normal"
